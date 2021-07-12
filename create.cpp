@@ -1,4 +1,6 @@
 #include <arpa/inet.h>
+#include <sstream>
+#include <cstdio>
 #include <errno.h>
 #include <fcntl.h>
 #include <iostream>
@@ -16,10 +18,12 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <unistd.h>
+using namespace std;
 
 #define ETH_TYPE_ARP 1544
+const string MY_HWADDR = "da:e8:0d:67:e7:fd";
+const string MY_IP = "10.0.0.2";
 
-using namespace std;
 
 struct eth_hdr {
     unsigned char dmac[6];
@@ -70,6 +74,60 @@ int tun_alloc(char *dev, int flags)
     return fd;
 }
 /*
+ * converts string mac (ff:da:23...)-> to char[6]
+ */
+/*
+ * void mac_to_arr(unsigned char *mac, string adr)
+ * {
+ *     string tmp;
+ *     for (int i = 0; i < 18; i += 3) {
+ *         tmp="";
+ *         tmp+=adr[i];
+ *         tmp+=adr[i+1];
+ *         unsigned int x;
+ *         stringstream ss;
+ *         ss << std::hex << tmp;
+ *         ss >> x;
+ *         mac[i/3]=x;
+ *     }
+ * }
+ * 
+ */
+void parse_mac(unsigned char* bytes, std::string const& in) {
+    if (std::sscanf(in.c_str(),
+                    "%02x:%02x:%02x:%02x:%02x:%02x",
+                    bytes, bytes+1, bytes+2,
+                    bytes+3, bytes+4, bytes+5) != 6)
+    {
+        throw std::runtime_error(in+std::string(" is an invalid MAC address"));
+    }
+}
+void parse_ip(unsigned char* bytes, std::string const& in) {
+    if (std::sscanf(in.c_str(),
+                    "%d.%d.%d.%d",
+                    bytes, bytes+1, bytes+2,
+                    bytes+3) != 4)
+    {
+        throw std::runtime_error(in+std::string(" is an invalid IP address"));
+    }
+}
+// void ip_to_arr(unsigned char *ip,string adr)
+// {
+
+    // string tmp;
+    // for (int i = 0; i < 18; i += 3) {
+        // tmp="";
+        // tmp+=adr[i];
+        // tmp+=adr[i+1];
+        // unsigned int x;
+        // stringstream ss;
+        // ss << std::hex << tmp;
+        // ss >> x;
+        // ip
+    // }
+
+// }
+/*
  * converts array of unsigned char [6] to a printable string of mac address
  */
 string mac_from_arr(unsigned char *t)
@@ -116,7 +174,7 @@ void print_eth_hdr(struct eth_hdr *hdr)
     cout << "dest: " + dest + " src: " + src << endl;
     cout << "type: ";
     switch (hdr->ethertype) {
-    case ETH_TYPE_ARP:
+    case ETH_P_ARP:
         cout << ("ARP");
         break;
     case ETH_P_IP:
@@ -146,56 +204,65 @@ struct arp_ip_hdr {
     unsigned char dip[4];
 } __attribute__((packed));
 
- /*
-  * Ethernet transmission layer (not necessarily accessible to
-  *         the user):
-  *        48.bit: Ethernet address of destination
-  *        48.bit: Ethernet address of sender
-  *        16.bit: Protocol type = ether_type$ADDRESS_RESOLUTION
-  *    Ethernet packet data:
-  *        16.bit: (ar$hrd) Hardware address space (e.g., Ethernet,
-  *                         Packet Radio Net.)
-  *        16.bit: (ar$pro) Protocol address space.  For Ethernet
-  *                         hardware, this is from the set of type
-  *                         fields ether_typ$<protocol>.
-  *         8.bit: (ar$hln) byte length of each hardware address
-  *         8.bit: (ar$pln) byte length of each protocol address
-  *        16.bit: (ar$op)  opcode (ares_op$REQUEST | ares_op$REPLY)
-  *        nbytes: (ar$sha) Hardware address of sender of this
-  *                         packet, n from the ar$hln field.
-  *        mbytes: (ar$spa) Protocol address of sender of this
-  *                         packet, m from the ar$pln field.
-  *        nbytes: (ar$tha) Hardware address of target of this
-  *                         packet (if known).
-  *        mbytes: (ar$tpa) Protocol address of target.
-  */
-void handle_ARP(struct eth_hdr* hdr)
+void print_arp(struct arp_hdr *arp, struct arp_ip_hdr *arp_ip)
 {
-    struct arp_hdr *arp = (struct arp_hdr *)hdr->payload;
-    struct arp_ip_hdr *arp_ip=(struct arp_ip_hdr*)arp->data;
-
-
     cout << "=====================================" << endl;
     cout << "          arp header" << endl;
     cout << "=====================================" << endl;
 
     cout << "hardware address type " << arp->hrd << endl;
     cout << "protocol type " << arp->pro << endl;
-    cout << "hardware address size " << arp->hln << endl;
-    cout << "protocol address " << arp->pln << endl;
+    cout << "hardware address size " << (int)arp->hln << endl;
+    cout << "protocol address " << (int)arp->pln << endl;
     cout << "ARP op code " << arp->op << endl;
-    cout<<"====================================="<<endl;
-    cout<<"sender mac address "<<mac_from_arr(arp_ip->smac) <<endl;
-    cout<<"sender ip address "<<ip_from_arr(arp_ip->sip)<<endl;
-    cout<<"target mac address "<<mac_from_arr(arp_ip->dmac)<<endl;
-    cout<<"target ip address "<<ip_from_arr(arp_ip->dip)<<endl;
+    cout << "=====================================" << endl;
+    cout << "sender mac address " << mac_from_arr(arp_ip->smac) << endl;
+    cout << "sender ip address " << ip_from_arr(arp_ip->sip) << endl;
+    cout << "target mac address " << mac_from_arr(arp_ip->dmac) << endl;
+    cout << "target ip address " << ip_from_arr(arp_ip->dip) << endl;
     cout << "=====================================" << endl;
     cout << endl;
+}
+/*
+ * Ethernet transmission layer (not necessarily accessible to
+ *         the user):
+ *        48.bit: Ethernet address of destination
+ *        48.bit: Ethernet address of sender
+ *        16.bit: Protocol type = ether_type$ADDRESS_RESOLUTION
+ *    Ethernet packet data:
+ *        16.bit: (ar$hrd) Hardware address space (e.g., Ethernet,
+ *                         Packet Radio Net.)
+ *        16.bit: (ar$pro) Protocol address space.  For Ethernet
+ *                         hardware, this is from the set of type
+ *                         fields ether_typ$<protocol>.
+ *         8.bit: (ar$hln) byte length of each hardware address
+ *         8.bit: (ar$pln) byte length of each protocol address
+ *        16.bit: (ar$op)  opcode (ares_op$REQUEST | ares_op$REPLY)
+ *        nbytes: (ar$sha) Hardware address of sender of this
+ *                         packet, n from the ar$hln field.
+ *        mbytes: (ar$spa) Protocol address of sender of this
+ *                         packet, m from the ar$pln field.
+ *        nbytes: (ar$tha) Hardware address of target of this
+ *                         packet (if known).
+ *        mbytes: (ar$tpa) Protocol address of target.
+ */
+void handle_ARP(struct eth_hdr *hdr)
+{
+    struct arp_hdr *arp = (struct arp_hdr *)hdr->payload;
+    arp->hrd = ntohs(arp->hrd);
+    arp->pro = ntohs(arp->pro);
+    struct arp_ip_hdr *arp_ip = (struct arp_ip_hdr *)arp->data;
+    print_arp(arp, arp_ip);
+    // check hardware address space
+    if (arp->hrd != 0x0001) return;
+    // check protocol
+    // i accept IPv4 only
+    if (arp->pro != 0x0800) return;
 }
 void check_ethertype(struct eth_hdr *hdr)
 {
     switch (hdr->ethertype) {
-    case ETH_TYPE_ARP:
+    case ETH_P_ARP:
         handle_ARP(hdr);
         break;
     default:
@@ -204,6 +271,12 @@ void check_ethertype(struct eth_hdr *hdr)
 }
 int main()
 {
+    unsigned char mac[6];
+    unsigned char ip[4];
+    parse_mac(mac, MY_HWADDR);
+    parse_ip(ip, MY_IP);
+    cout<<mac_from_arr(mac)<<endl;;
+    cout<<ip_from_arr(ip)<<endl;
     char tun_name[IFNAMSIZ];
     char buffer[500];
 
@@ -226,11 +299,10 @@ int main()
             close(tun_fd);
             exit(1);
         }
+        printf("Read %d bytes from device %s\n", nread, tun_name);
         struct eth_hdr *hdr = (struct eth_hdr *)buffer;
+        hdr->ethertype = ntohs(hdr->ethertype);
         print_eth_hdr(hdr);
         check_ethertype(hdr);
-
-        /* Do whatever with the data */
-        printf("Read %d bytes from device %s\n", nread, tun_name);
     }
 }
