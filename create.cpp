@@ -1,7 +1,7 @@
-#include<iostream>
 #include <arpa/inet.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <iostream>
 #include <linux/if_ether.h>
 #include <linux/if_tun.h>
 #include <net/if.h>
@@ -17,20 +17,21 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#define ETH_TYPE_ARP 1544
 
 
 struct eth_hdr {
     unsigned char dmac[6];
     unsigned char smac[6];
     uint16_t ethertype;
-    unsigned char payload[];
+    unsigned char *payload;
 } __attribute__((packed));
 
 int tun_alloc(char *dev, int flags)
 {
     struct ifreq ifr;
     int fd, err;
-    char *clonedev = "/dev/net/tun";
+    char *clonedev = (char *)"/dev/net/tun";
     /* Arguments taken by the function:
      *
      * char *dev: the name of an interface (or '\0'). MUST have enough
@@ -70,63 +71,45 @@ int tun_alloc(char *dev, int flags)
 using namespace std;
 void print_eth_hdr(struct eth_hdr *hdr)
 {
-    char dest[30];
-    char source[15];
-    dest[0] = '\0';
+
     char tmp[4];
-    int i;
-/*
- *     for (i = 0; i < 5; i++) {
- *         sprintf(tmp, "%02x:", hdr->dmac[i]);
- *         strcat(dest, tmp);
- *     }
- *     sprintf(tmp, "%02x", hdr->dmac[i]);
- *     strcat(dest, tmp);
- *     strcat(source, "\0");
- * 
- *     
- *     for (i = 0; i < 5; i++) {
- *         sprintf(tmp, "%02x:", hdr->smac[i]);
- *         strcat(source, tmp);
- *     }
- *     sprintf(tmp, "%02x", hdr->smac[i]);
- *     strcat(source, tmp);
- *     strcat(source, "\0");
- */
-
-    string dests="";
+    string dest = "";
+    string src = "";
     string aux;
-    for(i=0;i<6;i++)
-    {
-        sprintf(tmp,"%02x",hdr->dmac[i]);
-        aux=string(tmp);
-        dests+=aux;
-        dests+=':';
-    }
-    dests.pop_back();
-    cout<<dests;
-   // printf("destination: %s  from: %s\n", dest,source);
-    // printf("type: ");
-/*
- * 
- * 
- *     switch(hdr->ethertype)
- *     {
- *         case ETH_P_ARP:
- *             printf("ARP");
- *             break;
- *         case ETH_P_IP:
- *             printf("IPv4");
- *             break;
- *         case ETH_P_IPV6:
- *             printf("IPv6");
- *             break;
- *             default:
- *             printf("unknown frame type");
- *     }
- */
-    printf("\n");
 
+
+    for (int i = 0; i < 6; i++) {
+        sprintf(tmp, "%02x", hdr->dmac[i]);
+        aux = string(tmp);
+        dest += aux;
+        dest += ':';
+    }
+    dest.pop_back();
+
+    for (int i = 0; i < 6; i++) {
+        sprintf(tmp, "%02x", hdr->smac[i]);
+        aux = string(tmp);
+        src += aux;
+        src += ':';
+    }
+    src.pop_back();
+
+    cout << "dest: " + dest + " src: " + src << endl;
+    cout << "type: ";
+    switch (hdr->ethertype) {
+    case ETH_TYPE_ARP:
+        cout << ("ARP");
+        break;
+    case ETH_P_IP:
+        cout << ("IPv4");
+        break;
+    case ETH_P_IPV6:
+        cout << ("IPv6");
+        break;
+    default:
+        cout << ("unknown frame type");
+    }
+    cout << endl;
 }
 int main()
 {
