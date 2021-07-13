@@ -12,8 +12,11 @@ print:
 	$(info	object files: $(obj))
 
  
-obj/%.o: src/%.cpp $(headers)
+obj/%.o: src/%.cpp $(headers) | obj
 	g++ -I include -c $< -o $@
+
+obj:
+	mkdir -p $@
 
 clean:
 	rm obj/* tuntap
