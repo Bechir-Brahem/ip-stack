@@ -1,9 +1,9 @@
 #ifndef ARP_H
 #define ARP_H
 
-#include<iostream>
 #include <netinet/in.h>
 #include "ethernet.h"
+#include<cstring>
 struct arp_hdr {
     uint16_t hrd;
     uint16_t pro;

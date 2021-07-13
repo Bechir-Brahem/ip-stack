@@ -1,10 +1,10 @@
 #include "ethernet.h"
+#include "unistd.h"
 void print_eth_hdr(struct eth_hdr *hdr)
 {
 
-    char tmp[4];
-    std::string dest = "";
-    std::string src = "";
+    std::string dest;
+    std::string src;
     std::string aux;
     dest = mac_from_arr(hdr->dmac);
     src = mac_from_arr(hdr->smac);
@@ -36,4 +36,20 @@ void handle_ether_hdr(struct eth_hdr *hdr)
     default:
         return;
     }
+}
+struct eth_hdr* create_ethernet_hdr(unsigned char dmac[6],unsigned char smac[6],const unsigned char* payload,size_t payload_size)
+{
+
+    auto hdr = (struct eth_hdr *)malloc(sizeof(struct eth_hdr)+sizeof(payload_size));
+    memcpy(hdr->dmac, dmac, 6 * sizeof(unsigned char));
+    memcpy(hdr->smac, smac, 6 * sizeof(unsigned char));
+    hdr->ethertype=htons(ETH_P_ARP);
+    memcpy(hdr->payload, payload,(payload_size));
+    return hdr;
+
+}
+
+int send_frame(struct eth_hdr* hdr,size_t payload_size)
+{
+    write(tun_fd,hdr,payload_size+sizeof(struct eth_hdr));
 }

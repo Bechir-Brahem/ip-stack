@@ -2,7 +2,7 @@
 
 int tun_alloc(char *dev, int flags)
 {
-    struct ifreq ifr;
+    struct ifreq ifr{};
     int fd, err;
     char *clonedev = (char *)"/dev/net/tun";
     /* Arguments taken by the function:

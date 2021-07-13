@@ -1,26 +1,28 @@
-#include"utils.h"
+#include "utils.h"
 /*
  * converts string mac (ff:da:23...)-> to char[6]
  */
-void parse_mac(unsigned char* bytes, std::string const& in) {
+void parse_mac(unsigned char *bytes, std::string const &in)
+{
     if (std::sscanf(in.c_str(),
-                    "%02x:%02x:%02x:%02x:%02x:%02x",
-                    bytes, bytes+1, bytes+2,
-                    bytes+3, bytes+4, bytes+5) != 6)
+                    "%02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx",
+                    bytes, bytes + 1, bytes + 2,
+                    bytes + 3, bytes + 4, bytes + 5) != 6)
     {
-        throw std::runtime_error(in+std::string(" is an invalid MAC address"));
+        throw std::runtime_error(in + std::string(" is an invalid MAC address"));
     }
 }
 /*
  * converts string ip (192.168.1.1) to char [4]
  */
-void parse_ip(unsigned char* bytes, std::string const& in) {
+void parse_ip(unsigned char *bytes, std::string const &in)
+{
     if (std::sscanf(in.c_str(),
-                    "%d.%d.%d.%d",
-                    bytes, bytes+1, bytes+2,
-                    bytes+3) != 4)
+                    "%hhu.%hhu.%hhu.%hhu",
+                    bytes, bytes + 1, bytes + 2,
+                    bytes + 3) != 4)
     {
-        throw std::runtime_error(in+std::string(" is an invalid IP address"));
+        throw std::runtime_error(in + std::string(" is an invalid IP address"));
     }
 }
 /*
@@ -28,10 +30,11 @@ void parse_ip(unsigned char* bytes, std::string const& in) {
  */
 std::string mac_from_arr(unsigned char *t)
 {
-    std::string dest = "";
+    std::string dest;
     char tmp[4];
     std::string aux;
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 6; i++)
+    {
         sprintf(tmp, "%02x", t[i]);
         aux = std::string(tmp);
         dest += aux;
@@ -45,10 +48,11 @@ std::string mac_from_arr(unsigned char *t)
  */
 std::string ip_from_arr(unsigned char *t)
 {
-    std::string dest = "";
+    std::string dest;
     char tmp[4];
     std::string aux;
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++)
+    {
         sprintf(tmp, "%d", t[i]);
         aux = std::string(tmp);
         dest += aux;

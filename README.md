@@ -1,10 +1,11 @@
 # setup
 
-sudo ip tuntap add name tap1 mode tap  
-sudo ip link set tap1 up  
-sudo ip link set tap1 promisc on  
-sudo ip addr add 10.0.0.2/24 dev tap1  
-sudo ip route add dev tap1 10.0.0.2/24  
+```bash
+chmod +x setup.sh
+./setup.sh
+make
+sudo ./tuntap
+```
 
 # testing
 
