@@ -25,6 +25,8 @@ void print_arp(struct arp_hdr *arp, struct arp_ip_hdr *arp_ip)
     cout << "=====================================" << endl;
     cout << endl;
 }
+
+
 /*
  * transmission layer (not necessarily accessible to
  *         the user):
@@ -90,19 +92,22 @@ void handle_ARP(struct eth_hdr *hdr)
      /**
       * @brief check if i am the destination
       */
-     const string dmac = mac_from_arr(arp_ip->dmac);
-     if (MY_HWADDR != dmac and MAC_BROADCAST != dmac)
+    const string dmac = mac_from_arr(arp_ip->dmac);
+     if (MY_HWADDR != dmac and MAC_BROADCAST != dmac and dmac!="00:00:00:00:00:00")
          return;
 
-     if (arp->op != 1)
+    if (arp->op != 1)
          return;
+
     unsigned char my_mac[6];
     unsigned char my_ip[4];
     parse_ip(my_ip, MY_IP);
     parse_mac(my_mac, MY_HWADDR);
     auto reply=create_arp_hdr((uint16_t)2, my_mac, my_ip, arp_ip->smac, arp_ip->sip);
     print_arp(reply,(struct arp_ip_hdr*)reply->data);
+
     size_t payload_size=sizeof(struct arp_ip_hdr) + sizeof(struct arp_hdr);
+
     send_frame(create_ethernet_hdr(arp_ip->smac, my_mac,(unsigned char *)(reply),payload_size ),payload_size);
     free(reply);
 

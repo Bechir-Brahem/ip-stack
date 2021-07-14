@@ -9,7 +9,7 @@ sudo ./tuntap
 
 # testing
 
-sudo arping -I tap0 10.0.0.2  
+sudo arping -I tap0 10.0.0.1  
 
 
 

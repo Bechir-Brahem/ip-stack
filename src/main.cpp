@@ -3,7 +3,7 @@ using namespace std;
 #include "utils.h"
 #include "tuntap.h"
 #include "ethernet.h"
-
+int tun_fd=0;
 int main()
 {
     unsigned char mac[6];
@@ -15,7 +15,8 @@ int main()
 
     /* Connect to the device */
     strcpy(tun_name, DEV_NAME.c_str());
-    tun_fd = tun_alloc(tun_name, IFF_TAP | IFF_NO_PI); /* tun interface */
+     tun_fd = tun_alloc(tun_name, IFF_TAP | IFF_NO_PI); /* tun interface */
+    printf("aaa=%d",tun_fd);
 
     if (tun_fd < 0)
     {

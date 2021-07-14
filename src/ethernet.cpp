@@ -37,10 +37,10 @@ void handle_ether_hdr(struct eth_hdr *hdr)
         return;
     }
 }
-struct eth_hdr* create_ethernet_hdr(unsigned char dmac[6],unsigned char smac[6],const unsigned char* payload,size_t payload_size)
+struct eth_hdr* create_ethernet_hdr(unsigned char *dmac,unsigned char *smac,const unsigned char* payload,size_t payload_size)
 {
 
-    auto hdr = (struct eth_hdr *)malloc(sizeof(struct eth_hdr)+sizeof(payload_size));
+    auto hdr = (struct eth_hdr *)malloc(sizeof(struct eth_hdr)+payload_size);
     memcpy(hdr->dmac, dmac, 6 * sizeof(unsigned char));
     memcpy(hdr->smac, smac, 6 * sizeof(unsigned char));
     hdr->ethertype=htons(ETH_P_ARP);
@@ -51,5 +51,13 @@ struct eth_hdr* create_ethernet_hdr(unsigned char dmac[6],unsigned char smac[6],
 
 int send_frame(struct eth_hdr* hdr,size_t payload_size)
 {
-    write(tun_fd,hdr,payload_size+sizeof(struct eth_hdr));
+    unsigned long size=payload_size+sizeof(struct eth_hdr);
+    printf("bbb=%d",tun_fd);
+    if( (unsigned long) write(tun_fd,hdr,size)!= size)
+    {
+        perror("error writing frame to device");
+        close(tun_fd);
+        exit(1);
+    }
+    return 0;
 }
