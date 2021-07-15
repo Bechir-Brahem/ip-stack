@@ -8,21 +8,21 @@ using namespace std;
  */
 void print_arp(struct arp_hdr *arp, struct arp_ip_hdr *arp_ip)
 {
-    cout << "=====================================" << endl;
-    cout << "          arp header" << endl;
-    cout << "=====================================" << endl;
+    cout << "=====================================" << '\n';
+    cout << "          arp header" << '\n';
+    cout << "=====================================" << '\n';
 
-    cout << "hardware address type " << hex << arp->hrd << endl;
-    cout << "protocol type " << hex << arp->pro << endl;
-    cout << "hardware address size " << (int)arp->hln << endl;
-    cout << "protocol address " << (int)arp->pln << endl;
-    cout << "ARP op code " << arp->op << endl;
-    cout << "=====================================" << endl;
-    cout << "sender mac address " << mac_from_arr(arp_ip->smac) << endl;
-    cout << "sender ip address " << ip_from_arr(arp_ip->sip) << endl;
-    cout << "target mac address " << mac_from_arr(arp_ip->dmac) << endl;
-    cout << "target ip address " << ip_from_arr(arp_ip->dip) << endl;
-    cout << "=====================================" << endl;
+    cout << "hardware address type " << hex << arp->hrd <<dec<< '\n';
+    cout << "protocol type " << hex << arp->pro <<dec<< '\n';
+    cout << "hardware address size " << (int)arp->hln << '\n';
+    cout << "protocol address " << (int)arp->pln << '\n';
+    cout << "ARP op code " << arp->op << '\n';
+    cout << "=====================================" << '\n';
+    cout << "sender mac address " << mac_from_arr(arp_ip->smac) << '\n';
+    cout << "sender ip address " << ip_from_arr(arp_ip->sip) << '\n';
+    cout << "target mac address " << mac_from_arr(arp_ip->dmac) << '\n';
+    cout << "target ip address " << ip_from_arr(arp_ip->dip) << '\n';
+    cout << "=====================================" << '\n';
     cout << endl;
 }
 
