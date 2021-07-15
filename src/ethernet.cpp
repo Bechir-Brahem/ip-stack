@@ -41,7 +41,7 @@ void handle_ether_hdr(struct eth_hdr *hdr)
         return;
     }
 }
-struct eth_hdr* create_ethernet_hdr(unsigned char *dmac,unsigned char *smac,const unsigned char* payload,size_t payload_size,uint16_t ethertype)
+struct eth_hdr* create_ethernet_hdr(unsigned char *dmac,unsigned char *smac,const unsigned char payload[],size_t payload_size,uint16_t ethertype)
 {
 
     auto hdr = (struct eth_hdr *)malloc(sizeof(struct eth_hdr)+payload_size);
@@ -55,6 +55,7 @@ struct eth_hdr* create_ethernet_hdr(unsigned char *dmac,unsigned char *smac,cons
 
 int send_frame(struct eth_hdr* hdr,size_t payload_size)
 {
+
     unsigned long size=payload_size+sizeof(struct eth_hdr);
     if( (unsigned long) write(tun_fd,hdr,size)!= size)
     {

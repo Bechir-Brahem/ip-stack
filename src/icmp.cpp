@@ -26,7 +26,9 @@ void handle_icmp(struct icmp_hdr* icmp,int icmp_size)
         reply->csum=icmp->csum;
         memcpy(reply->data, icmp->data, (unsigned long)(icmp_size) - sizeof(struct icmp_hdr));
         //TODO fix ip problem
+        printf("ICMP SIZE %d",icmp_size);
         send_ip_packet((size_t)(icmp_size), IPPROTO_ICMP, MY_IP, "10.0.0.2", (unsigned char*)reply);
+        free(reply);
         cout<<"ICMP packet sent"<<endl;
 
 

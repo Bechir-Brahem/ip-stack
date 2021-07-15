@@ -1,4 +1,5 @@
-CFLAGS = -I include -Wno-format -Wall -Wextra -std=c++14 -Wshadow -Wformat=2 -Wfloat-equal -Wconversion -Wlogical-op -Wshift-overflow=2 -Winline -fdiagnostics-parseable-fixits -fdiagnostics-generate-patch -fdiagnostics-show-template-tree -fsanitize=undefined -fno-sanitize-recover -Og -ggdb3
+# CFLAGS = -I include -Wno-format -Wall -Wextra -std=c++14 -Wshadow -Wformat=2 -Wfloat-equal -Wconversion -Wlogical-op -Wshift-overflow=2 -Winline -fdiagnostics-parseable-fixits -fdiagnostics-generate-patch -fdiagnostics-show-template-tree -fsanitize=undefined -fno-sanitize-recover -Og -ggdb3
+CFLAGS = -I include -Wno-format -Wall -Wextra -std=c++14 -Wshadow -Wformat=2 -Wfloat-equal -Wconversion -Wlogical-op -Wshift-overflow=2 -Winline -fdiagnostics-parseable-fixits -fdiagnostics-generate-patch -fdiagnostics-show-template-tree -fsanitize=address -fsanitize=undefined -fno-sanitize-recover -D_FORTIFY_SOURCE=2 -fstack-protector -Og -ggdb3
 
 
 src = $(wildcard src/*.cpp)

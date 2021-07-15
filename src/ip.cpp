@@ -47,7 +47,7 @@ void handle_ip(struct ip_hdr* ip)
     {
         //ICMP
         case IPPROTO_ICMP:
-            handle_icmp((struct icmp_hdr*)ip->payload,ntohs(ip->len)-ip->ihl);
+            handle_icmp((struct icmp_hdr*)ip->payload,ntohs(ip->len)-ip->ihl*4);
             break;
         case IPPROTO_TCP:
             //handle_TCP();
@@ -64,7 +64,7 @@ void send_ip_packet(size_t payload_size,uint8_t proto,const string& saddr,const 
     packet->ihl=5;
     packet->version=4;
     packet->tos=0;
-    packet->len= static_cast<uint16_t>(size);
+    packet->len= htons(static_cast<uint16_t>(size));
     packet->id=0x5;
     packet->flags_and_offset=64;
     packet->ttl=64;
@@ -76,10 +76,12 @@ void send_ip_packet(size_t payload_size,uint8_t proto,const string& saddr,const 
     parse_ip(packet->daddr,daddr);
     memcpy(packet->payload,payload,payload_size);
     //TODO fix mac with arp request
-    unsigned char mac[4];
+    unsigned char mac[6];
     parse_mac(mac,MY_HWADDR);
     auto eth_frame= create_ethernet_hdr(mac,mac,(unsigned char*)packet,size,ETH_P_IP);
     send_frame(eth_frame,size);
+    free(eth_frame);
+    free(packet);
     cout<<"ip packet sent"<<endl;
 
 

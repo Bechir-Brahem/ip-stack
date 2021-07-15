@@ -107,8 +107,9 @@ void handle_ARP(struct eth_hdr *hdr)
     print_arp(reply,(struct arp_ip_hdr*)reply->data);
 
     size_t payload_size=sizeof(struct arp_ip_hdr) + sizeof(struct arp_hdr);
-
-    send_frame(create_ethernet_hdr(arp_ip->smac, my_mac,(unsigned char *)(reply),payload_size ),payload_size);
+auto eth=create_ethernet_hdr(arp_ip->smac, my_mac,(unsigned char *)(reply),payload_size );
+    send_frame(eth,payload_size);
+    free(eth);
     free(reply);
 
 }

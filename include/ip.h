@@ -29,5 +29,5 @@ struct ip_hdr {
 
 void handle_ip(struct ip_hdr*);
 void print_ip(struct ip_hdr* ip);
-void send_ip_packet(size_t payload_size,uint8_t proto,const std::string& saddr,const std::string& daddr,unsigned char payload[])
+void send_ip_packet(size_t payload_size,uint8_t proto,const std::string& saddr,const std::string& daddr,unsigned char payload[]);
 #endif //TUNTAP_IP_H

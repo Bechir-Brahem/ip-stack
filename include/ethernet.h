@@ -1,6 +1,7 @@
 #ifndef ETHERNET_H
 #define ETHERNET_H
 
+#include "ip.h"
 #include "iostream"
 #include <cstdint>
 #include <linux/if_ether.h>
@@ -8,7 +9,6 @@
 #include "utils.h"
 #include "arp.h"
 #include "unistd.h"
-#include "ip.h"
 
 struct eth_hdr {
     unsigned char dmac[6];
