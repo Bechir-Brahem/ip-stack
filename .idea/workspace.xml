@@ -17,12 +17,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="40829a69-97cf-4b05-bbd3-059c498d7666" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/ip.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/ip.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/icmp.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/icmp.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ip.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ip.cpp" afterDir="false" />
-    </list>
+    <list default="true" id="40829a69-97cf-4b05-bbd3-059c498d7666" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -122,7 +117,7 @@
       <workItem from="1626358203322" duration="6004000" />
       <workItem from="1626374320071" duration="3928000" />
       <workItem from="1626430009188" duration="1030000" />
-      <workItem from="1626440545405" duration="1542000" />
+      <workItem from="1626440545405" duration="1707000" />
     </task>
     <servers />
   </component>
