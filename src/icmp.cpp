@@ -22,9 +22,9 @@ void handle_icmp(struct icmp_hdr* icmp,int icmp_size)
         auto reply =(struct icmp_hdr*) malloc((size_t)icmp_size);
         reply->type=ICMP_ECHO_REP;
         reply->code=0;
-        //TODO fix checksum
-        reply->csum=icmp->csum;
+        reply->csum=0;
         memcpy(reply->data, icmp->data, (unsigned long)(icmp_size) - sizeof(struct icmp_hdr));
+        reply->csum= checksum((uint16_t*)reply,(size_t)icmp_size/2);
         //TODO fix ip problem
         printf("ICMP SIZE %d",icmp_size);
         send_ip_packet((size_t)(icmp_size), IPPROTO_ICMP, MY_IP, "10.0.0.2", (unsigned char*)reply);

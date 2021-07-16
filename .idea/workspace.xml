@@ -19,11 +19,7 @@
   <component name="ChangeListManager">
     <list default="true" id="40829a69-97cf-4b05-bbd3-059c498d7666" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/ethernet.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/ethernet.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/include/ip.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/ip.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/makefile" beforeDir="false" afterPath="$PROJECT_DIR$/makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/arp.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/arp.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ethernet.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ethernet.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/icmp.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/icmp.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ip.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ip.cpp" afterDir="false" />
     </list>
@@ -108,16 +104,6 @@
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
     <list>
       <item itemvalue="Makefile Application.all" />
       <item itemvalue="Makefile Application.obj" />
@@ -134,7 +120,9 @@
       <option name="presentableId" value="Default" />
       <updated>1626358199547</updated>
       <workItem from="1626358203322" duration="6004000" />
-      <workItem from="1626374320071" duration="3291000" />
+      <workItem from="1626374320071" duration="3928000" />
+      <workItem from="1626430009188" duration="1030000" />
+      <workItem from="1626440545405" duration="1542000" />
     </task>
     <servers />
   </component>

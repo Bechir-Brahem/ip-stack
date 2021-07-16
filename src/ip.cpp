@@ -41,8 +41,17 @@ void handle_ip(struct ip_hdr* ip)
     {
         return;
     }
+    //checking checksum
+    uint16_t  tmp_csum=ip->csum;
+    ip->csum=0;
+
+    if(tmp_csum!=checksum((uint16_t*)ip,ip->ihl*2))
+    {
+        cout<<"invalid checksum\n";
+        return ;
+    }
+    ip->csum=tmp_csum;
     //TODO:check fragmentation
-    //TODO:check checksum
     switch(ip->proto)
     {
         //ICMP
@@ -69,12 +78,13 @@ void send_ip_packet(size_t payload_size,uint8_t proto,const string& saddr,const 
     packet->flags_and_offset=64;
     packet->ttl=64;
     packet->proto=proto;
-    //TODO fix checksum
-    packet->csum=0x11;
+    packet->csum=0;
     parse_ip(packet->saddr,saddr);
     //TODO fix ip
     parse_ip(packet->daddr,daddr);
     memcpy(packet->payload,payload,payload_size);
+
+    packet->csum= checksum((uint16_t *)packet,packet->ihl*2);
     //TODO fix mac with arp request
     unsigned char mac[6];
     parse_mac(mac,MY_HWADDR);
@@ -87,4 +97,20 @@ void send_ip_packet(size_t payload_size,uint8_t proto,const string& saddr,const 
 
 
 
+}
+
+uint16_t checksum(uint16_t* ptr,size_t size){
+    uint32_t ret=0;
+    uint32_t tmp=1<<16;
+    while(size){
+        ret+=*ptr;
+        ptr++;
+        size--;
+        if((ret & tmp) !=0)
+        {
+            ret-=tmp;
+            ret++;
+        }
+    }
+    return (uint16_t )~ret;
 }
