@@ -1,3 +1,16 @@
+# Presentation
+
+this project is a simple implementation of an ip stack that answers to arp packets
+and also responds to icmp ping requests. 
+
+This code implements the ip stack on a virtual tap interface that you can setup by using 
+the setup.sh bash file
+
+![arp ](images/arp.png )
+![icmp](images/icmp.png)
+![ping](images/ping.png)
+
+
 # setup
 
 ```bash
